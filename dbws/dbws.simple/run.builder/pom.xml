@@ -1,0 +1,285 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>eclipselink.example.dbws</groupId>
+	<artifactId>dbws.simple</artifactId>
+	<version>2.4.2-SNAPSHOT</version>
+	<packaging>war</packaging>
+
+	<name>EclipseLink Simple DBWS Example</name>
+	<url>http://wiki.eclipse.org/EclipseLink/Examples/DBWS</url>
+
+	<scm>
+		<connection>git://git.eclipse.org/gitroot/eclipselink/examples.git</connection>
+		<url>http://git.eclipse.org/c/eclipselink/examples.git/</url>
+	</scm>
+
+	<licenses>
+		<license>
+			<name>EPL: Eclipse Public License</name>
+			<url>http://www.eclipse.org/legal/epl-v10.html</url>
+		</license>
+		<license>
+			<name>EDL: Eclipse Distribution License</name>
+			<url>http://www.eclipse.org/org/documents/edl-v10.php</url>
+		</license>
+	</licenses>
+
+	<developers>
+		<developer>
+			<name>Doug Clarke</name>
+			<organization>Oracle</organization>
+			<email>douglas.clarke@oracle.com</email>
+			<url>java-persistence.blogspot.com</url>
+		</developer>
+		<developer>
+			<name>Dave McCann</name>
+			<organization>Oracle</organization>
+			<email>david.mccann@oracle.com</email>
+		</developer>
+	</developers>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<eclipselink.groupid>org.eclipse.persistence</eclipselink.groupid>
+		<eclipselink.artifactid>eclipselink</eclipselink.artifactid>
+		<eclipselink.version>2.4.2-SNAPSHOT</eclipselink.version>
+	</properties>
+
+	<repositories>
+		<repository>
+			<id>Java.Net</id>
+			<url>http://download.java.net/maven/2/</url>
+		</repository>
+		<repository>
+			<id>EclipseLink</id>
+			<url>http://download.eclipse.org/rt/eclipselink/maven.repo</url>
+		</repository>
+	</repositories>
+
+	<dependencies>
+		<dependency>
+			<groupId>${eclipselink.groupid}</groupId>
+			<artifactId>${eclipselink.artifactid}</artifactId>
+			<version>${eclipselink.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>${eclipselink.groupid}</groupId>
+					<artifactId>commonj.sdo</artifactId>
+				</exclusion>
+			</exclusions>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.11</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>5.1.24</version>
+			<scope>test</scope>
+		</dependency>
+		
+        <dependency>
+			<groupId>org.eclipse.persistence</groupId>
+			<artifactId>org.eclipse.persistence.oracleddlparser</artifactId>
+			<version>2.4.2-SNAPSHOT</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>servlet-api</artifactId>
+			<version>2.4</version>
+		</dependency>
+        
+		<dependency>
+			<groupId>wsdl4j</groupId>
+			<artifactId>wsdl4j</artifactId>
+			<version>1.6.3</version>
+			<scope>test</scope>
+		</dependency>
+		
+        <dependency>
+			<groupId>org.eclipse.persistence</groupId>
+			<artifactId>dbws.builder</artifactId>
+			<version>${eclipselink.version}</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>eclipselink.example.dbws</groupId>
+			<artifactId>dbws.maven</artifactId>
+			<version>2.4.2-SNAPSHOT</version>
+			<scope>compile</scope>
+		</dependency>
+	</dependencies>
+
+	<build>
+
+		<finalName>dbws.simple</finalName>
+		<defaultGoal>package</defaultGoal>
+
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.5.1</version>
+				<configuration>
+					<source>1.7</source>
+					<target>1.7</target>
+				</configuration>
+			</plugin>
+            
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>create-empty-directory</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <tasks>
+                                <mkdir dir="${project.basedir}/src/main" />
+                            </tasks>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				<version>1.1.1</version>
+				<executions>
+					<execution>
+						<id>dbws-builder</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>java</goal>
+						</goals>
+						<configuration>
+							<classpathScope>test</classpathScope>
+							<mainClass>org.eclipse.persistence.tools.dbws.DBWSBuilder</mainClass>
+							<arguments>
+								<argument>-builderFile</argument>
+								<argument>${project.basedir}/dbws-builder.xml</argument>
+								<argument>-stageDir</argument>
+								<argument>${project.basedir}/src/main</argument>
+								<argument>-packageAs</argument>
+								<argument>maven</argument>
+							</arguments>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+            
+            <!--
+             <target
+             name="reset-database"
+             depends="init"
+             >
+             <sql
+             onerror="continue"
+             driver="${db.driver}"
+             url="${db.url}"
+             userid="${db.user}"
+             password="${db.pwd}"
+             classpathref="db.path"
+             delimiter="|"
+             src="${config.dir}/teardown.sql"
+             />
+             <sql
+             onerror="continue"
+             driver="${db.driver}"
+             url="${db.url}"
+             userid="${db.user}"
+             password="${db.pwd}"
+             classpathref="db.path"
+             delimiter="|"
+             src="${config.dir}/setup.sql"
+             />
+             </target>
+             -->
+
+            <plugin>
+                <groupId>com.google.code.maven-replacer-plugin</groupId>
+                <artifactId>replacer</artifactId>
+                <version>1.5.2</version>
+                <executions>
+                    <execution>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>replace</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <file>${project.basedir}/target/classes/META-INF/eclipselink-dbws-sessions.xml</file>
+                    <replacements>
+                        <replacement>
+                            <token>SERVER_CLASS_NAME_TOKEN</token>
+                            <value>${server.name}</value>
+                        </replacement>
+                        <replacement>
+                            <token>EXT_TRANS_CONTROLLER_CLASS_TOKEN</token>
+                            <value>${external.txn.controller.name}</value>
+                        </replacement>
+                    </replacements>
+                </configuration>
+            </plugin>
+            
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>properties-maven-plugin</artifactId>
+				<version>1.0-alpha-2</version>
+				<executions>
+					<execution>
+						<phase>initialize</phase>
+						<goals>
+							<goal>read-project-properties</goal>
+						</goals>
+						<configuration>
+							<files>
+								<file>${project.basedir}/../../config.properties</file>
+							</files>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+            
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-clean-plugin</artifactId>
+				<version>2.4.1</version>
+				<configuration>
+					<filesets>
+						<fileset>
+							<directory>${project.basedir}/src/main</directory>
+							<includes>
+								<include>**/*</include>
+							</includes>
+							<followSymlinks>false</followSymlinks>
+						</fileset>
+					</filesets>
+				</configuration>
+			</plugin>
+            
+		</plugins>
+
+		<resources>
+			<resource>
+				<directory>${project.basedir}/src/main/java/</directory>
+			</resource>
+		</resources>
+
+	</build>
+</project>

@@ -1,0 +1,44 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core">
+
+
+<ui:composition template="/WEB-INF/template.jsf">
+	<ui:define name="body">
+		<h:form>
+			<h:panelGrid width="600" columns="2" class="table-design">
+				<f:facet name="header">Employee Search</f:facet>
+				<h:outputLabel value="First Name:" />
+				<h:inputText value="#{searchEmployees.criteria.firstName}" />
+				<h:outputLabel value="Last Name:" />
+				<h:inputText value="#{searchEmployees.criteria.lastName}" />
+				<h:outputLabel value="Page Results:" />
+				<h:selectOneMenu value="#{searchEmployees.criteria.pagingType}">
+					<f:selectItem itemValue="NONE" itemLabel="None" />
+					<f:selectItem itemValue="PAGE" itemLabel="First/Max Paging" />
+					<f:selectItem itemValue="PAGE_IN" itemLabel="Ids IN Paging" />
+				</h:selectOneMenu>
+				<f:facet name="footer">
+					<div align="right">
+						<h:commandButton action="#{searchEmployees.search}" value="Search"
+							class="menu-button" />
+					</div>
+				</f:facet>
+			</h:panelGrid>
+		</h:form>
+	</ui:define>
+
+	<ui:define name="eclipselink">
+		<h3>Detail Searches</h3>
+		<p>This page represents a more complex search approach where a
+			variety of criteria can be selected. Behind the scene a query is
+			dynamically constructed using the JPA criteria API.</p>
+		<p>Three different options are available to page the results.</p>
+	</ui:define>
+
+</ui:composition>
+</html>

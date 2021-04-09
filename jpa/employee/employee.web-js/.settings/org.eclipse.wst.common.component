@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
+    <wb-module deploy-name="Employee Example - web - js">
+        <wb-resource deploy-path="/" source-path="/target/m2e-wtp/web-resources"/>
+        <wb-resource deploy-path="/" source-path="/src/main/webapp" tag="defaultRootSource"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
+        <dependent-module archiveName="employee.model-2.6.0-M3.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/employee.model/employee.model">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <property name="java-output-path" value="/Employee Example - web - js/target/classes"/>
+        <property name="context-root" value="employee.web-js"/>
+    </wb-module>
+</project-modules>

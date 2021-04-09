@@ -1,0 +1,46 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core">
+
+
+<ui:composition template="/WEB-INF/template.jsf">
+	<ui:define name="body">
+		<h1>Administration</h1>
+		<h:form>
+			<div align="center" class="main-menu">
+				<p />
+				<h:commandButton value="Reset Database"
+					action="#{admin.resetDatabase}" class="menu-button"
+					style="width: 400" />
+				<p />
+				<h:commandButton value="Populate (25)"
+					action="#{admin.populateDatabase}" class="menu-button"
+					style="width: 400" />
+				<p />
+			</div>
+		</h:form>
+		<h2>Entity Status</h2>
+		<h:form>
+			<h:dataTable var="type" value="#{admin.typeNames}"
+				class="table-design" width="500">
+				<h:column>
+					<f:facet name="header">Type</f:facet>
+					<h:outputLabel value="#{type}" />
+				</h:column>
+				<h:column>
+					<f:facet name="header">
+						<div align="center">Cache Size</div>
+					</f:facet>
+					<div align="center">
+						<h:outputLabel value="#{admin.getCacheSize(type)}" />
+					</div>
+				</h:column>
+			</h:dataTable>
+		</h:form>
+	</ui:define>
+</ui:composition>
+</html>

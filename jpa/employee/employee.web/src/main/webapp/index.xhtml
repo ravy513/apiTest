@@ -1,0 +1,48 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core">
+
+
+<ui:composition template="/WEB-INF/template.jsf">
+	<ui:define name="body">
+		<h:form>
+			<h:panelGrid width="600" columns="1" class="table-design">
+				<f:facet name="header">Employee</f:facet>
+				<h:panelGroup>
+					<h4>Employee Quick Search</h4>
+					<div align="center">
+						First Name:
+						<h:inputText value="#{searchEmployees.criteria.firstName}" />
+						Last Name:
+						<h:inputText value="#{searchEmployees.criteria.lastName}" />
+						<p />
+						<h:commandButton value="Search" action="#{searchEmployees.search}"
+							class="menu-button" />
+					</div>
+					<div align="right">
+						<h:commandLink value="Advanced Search"
+							action="#{navigation.search}" />
+					</div>
+				</h:panelGroup>
+				<h:panelGroup>
+					<div align="center">
+						<h:commandButton action="#{navigation.edit}" value="Create"
+							class="menu-button" />
+					</div>
+				</h:panelGroup>
+			</h:panelGrid>
+		</h:form>
+	</ui:define>
+
+	<ui:define name="eclipselink">
+		<h3>Inside EclipseLink</h3>
+		<p>Each feature of the example will be explained including links
+			to relevant documentation and wiki content.</p>
+	</ui:define>
+
+</ui:composition>
+</html>

@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-mappings version="2.1"
+	xmlns="http://www.eclipse.org/eclipselink/xsds/persistence/orm"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+	<package>example.jpa.dynamic.model.employee</package>
+
+	<!--object-type-converter name="gender-converter" object-type="String" data-type="String">
+		<conversion-value object-value="Male" data-value="M" /> <conversion-value
+		object-value="Female" data-value="F" /> </object-type-converter -->
+
+	<named-query name="Employee.findAll">
+		<query>SELECT e FROM Employee e ORDER BY e.lastName, e.firstName
+		</query>
+		<hint name="eclipselink.query-results-cache" value="True" />
+	</named-query>
+
+	<named-query name="Employee.findMin">
+		<query>SELECT e FROM Employee e WHERE e.id IN (SELECT MIN(ee.id) FROM
+			Employee ee)
+		</query>
+	</named-query>
+
+	<entity class="Address" access="VIRTUAL">
+		<attributes>
+			<id name="id" attribute-type="Integer">
+				<column name="ADDRESS_ID" />
+				<generated-value strategy="SEQUENCE" generator="address-generator" />
+				<sequence-generator name="address-generator"
+					sequence-name="ADDR_SEQ" />
+			</id>
+			<basic name="city" attribute-type="String" />
+			<basic name="country" attribute-type="String" />
+			<basic name="province" attribute-type="String" />
+			<basic name="postalCode" attribute-type="String">
+				<column name="P_CODE" />
+			</basic>
+			<basic name="street" attribute-type="String" />
+		</attributes>
+	</entity>
+
+	<entity class="PhoneNumber" access="VIRTUAL">
+		<table name="PHONE" />
+		<attributes>
+			<id name="id" attribute-type="Integer">
+				<column name="PHONE_NUM_ID" />
+				<generated-value strategy="SEQUENCE" />
+			</id>
+			<basic name="type" attribute-type="String">
+				<column updatable="false" />
+			</basic>
+			<basic name="areaCode" attribute-type="String">
+				<column name="AREA_CODE" />
+			</basic>
+			<basic name="number" attribute-type="String">
+				<column name="P_NUMBER" />
+			</basic>
+			<many-to-one name="owner" fetch="EAGER" target-entity="Employee">
+				<join-column name="EMP_ID" />
+			</many-to-one>
+		</attributes>
+	</entity>
+
+	<entity class="Employee" access="VIRTUAL">
+		<secondary-table name="SALARY" />
+		<attributes>
+			<id name="id" attribute-type="Integer">
+				<column name="EMP_ID" />
+				<generated-value strategy="SEQUENCE" generator="employee-generator" />
+				<sequence-generator name="employee-generator"
+					sequence-name="EMP_SEQ" />
+			</id>
+			<basic name="firstName" attribute-type="String">
+				<column name="F_NAME" />
+			</basic>
+			<basic name="lastName" attribute-type="String">
+				<column name="L_NAME" />
+			</basic>
+			<basic name="startTime" attribute-type="String">
+				<column name="START_TIME" />
+			</basic>
+			<basic name="endTime" attribute-type="String">
+				<column name="END_TIME" />
+			</basic>
+			<basic name="gender" attribute-type="String">
+				<column name="GENDER" />
+			</basic>
+			<entity class="eclipselink.example.jpa.employee.model.Employee">
+				<convert converter="eclipselink.example.jpa.employee.model.GenderConverter"
+					attribute-name="gender" />
+			</entity>
+			<basic name="salary" attribute-type="Integer">
+				<column table="SALARY" />
+			</basic>
+
+			<version name="version" attribute-type="Long" />
+
+			<many-to-one name="manager" fetch="EAGER" optional="true"
+				target-entity="Employee">
+				<join-column name="MANAGER_ID" />
+			</many-to-one>
+
+			<one-to-many name="managedEmployees" mapped-by="manager"
+				target-entity="Employee" attribute-type="java.util.List" />
+
+			<one-to-many name="phoneNumbers" mapped-by="owner"
+				target-entity="PhoneNumber" attribute-type="java.util.List">
+				<cascade>
+					<cascade-all />
+				</cascade>
+				<private-owned />
+			</one-to-many>
+
+			<one-to-one name="address" fetch="EAGER" target-entity="Address">
+				<join-column name="ADDR_ID" />
+				<cascade>
+					<cascade-all />
+				</cascade>
+				<private-owned />
+			</one-to-one>
+
+			<element-collection name="responsibilities"
+				attribute-type="java.util.List" target-class="String">
+				<column name="RESPON_DESC" />
+				<collection-table name="RESPONS" />
+			</element-collection>
+
+		</attributes>
+	</entity>
+
+</entity-mappings>
